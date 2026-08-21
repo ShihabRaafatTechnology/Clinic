@@ -58,7 +58,7 @@ export const PatientForm = () => {
           name="name"
           label="Full name"
           placeholder="Shihab Raafat"
-          iconSrc="/assets/icons/user.svg"
+          iconSrc="/assets/icons/card-id.svg"
           iconAlt="user"
           suggestions={names.values}
           suggestionSubtitle="Saved name"

@@ -75,13 +75,13 @@ function CustomFormField<T extends FieldValues>({
 
           <div className="relative w-full">
             <div
-              className={`flex items-center rounded-md border bg-dark-400 transition-colors ${
+              className={`${fieldType === FormFieldType.PHONE_INPUT ? "" : "flex items-center rounded-md border bg-dark-400 transition-colors"} ${
                 fieldState.invalid
                   ? "border-red-500 focus-within:border-red-500"
                   : "border-dark-500 focus-within:border-primary/60"
               }`}
             >
-              {iconSrc && (
+              {iconSrc && fieldType !== FormFieldType.PHONE_INPUT && (
                 <Image
                   src={iconSrc}
                   height={24}
@@ -134,6 +134,7 @@ function CustomFormField<T extends FieldValues>({
                 }
                 subtitle={suggestionSubtitle}
                 onSelect={(value) => field.onChange(value)}
+                iconSrc={iconSrc}
               />
             )}
           </div>

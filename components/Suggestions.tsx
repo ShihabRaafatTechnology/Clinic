@@ -7,6 +7,8 @@ interface SuggestionsProps {
   items: string[];
   onSelect: (value: string) => void;
   subtitle?: string;
+  /** Icon shown per suggestion row — pass the field's own icon */
+  iconSrc?: string;
 }
 
 /**
@@ -17,6 +19,7 @@ export function Suggestions({
   items,
   onSelect,
   subtitle = "Saved",
+  iconSrc = "/assets/icons/card-id.svg",
 }: SuggestionsProps) {
   if (items.length === 0) return null;
 
@@ -37,7 +40,7 @@ export function Suggestions({
             className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-dark-500"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-dark-500 bg-dark-500">
-              <Image src="/assets/icons/card-id.svg" alt="" width={18} height={18} />
+              <Image src={iconSrc} alt="" width={18} height={18} />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-medium text-white">
