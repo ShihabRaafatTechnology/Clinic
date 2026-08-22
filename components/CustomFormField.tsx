@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Control,
-  Controller,
-  FieldValues,
-  Path,
-} from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import PhoneInput from "react-phone-number-input";
@@ -13,6 +8,7 @@ import "react-phone-number-input/style.css";
 import { Field, FieldError, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import { Suggestions } from "./Suggestions";
+import { CountrySelect } from "./CountrySelect";
 import Image from "next/image";
 
 export enum FormFieldType {
@@ -37,6 +33,7 @@ interface CustomProps<T extends FieldValues> {
   dateFormat?: string;
   showTimeSelect?: boolean;
   children?: ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   renderSkeleton?: (field: any) => ReactNode;
   suggestions?: string[];
   suggestionSubtitle?: string;
@@ -53,7 +50,6 @@ function CustomFormField<T extends FieldValues>({
   iconSrc,
   iconAlt,
   disabled,
-  children,
   renderSkeleton,
   suggestions = [],
   suggestionSubtitle,
@@ -61,6 +57,12 @@ function CustomFormField<T extends FieldValues>({
   autoComplete = "nope",
 }: CustomProps<T>) {
   const [isFocused, setIsFocused] = useState(false);
+
+  // Random DOM id/name so browser autofill can't recognize the field.
+  // Safe because react-hook-form tracks values via Controller, not the DOM.
+  const [domId] = useState(
+    () => `${String(name)}-${Math.random().toString(36).slice(2, 8)}`
+  );
 
   return (
     <Controller
@@ -70,17 +72,22 @@ function CustomFormField<T extends FieldValues>({
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           {fieldType !== FormFieldType.CHECKBOX && label && (
-            <FieldLabel htmlFor={name}>{label}</FieldLabel>
+            <FieldLabel htmlFor={domId}>{label}</FieldLabel>
           )}
 
           <div className="relative w-full">
             <div
-              className={`${fieldType === FormFieldType.PHONE_INPUT ? "" : "flex items-center rounded-md border bg-dark-400 transition-colors"} ${
+              className={`${
+                fieldType === FormFieldType.PHONE_INPUT
+                  ? ""
+                  : "flex items-center rounded-md border bg-dark-400 transition-colors"
+              } ${
                 fieldState.invalid
                   ? "border-red-500 focus-within:border-red-500"
                   : "border-dark-500 focus-within:border-primary/60"
               }`}
             >
+              {/* Show icon in all fields but phone input doesn't show */}
               {iconSrc && fieldType !== FormFieldType.PHONE_INPUT && (
                 <Image
                   src={iconSrc}
@@ -91,12 +98,16 @@ function CustomFormField<T extends FieldValues>({
                 />
               )}
 
+              {/* Phone Input Form */}
               {fieldType === FormFieldType.PHONE_INPUT ? (
                 <PhoneInput
                   international
                   withCountryCallingCode
+                  countryCallingCodeEditable={false}
                   defaultCountry="EG"
-                  id={name}
+                  countrySelectComponent={CountrySelect as never}
+                  id={domId}
+                  name={domId}
                   placeholder={placeholder}
                   autoComplete={autoComplete}
                   value={(field.value as string) || undefined}
@@ -108,13 +119,14 @@ function CustomFormField<T extends FieldValues>({
               ) : fieldType === FormFieldType.SKELETON ? (
                 renderSkeleton?.(field)
               ) : (
+                /* Default Input Form (User Form) */
                 <Input
                   {...field}
-                  id={name}
+                  id={domId}
+                  name={domId}
                   type={type}
                   placeholder={placeholder}
                   autoComplete={autoComplete}
-                  aria-invalid={fieldState.invalid}
                   className="shad-input border-0 focus-visible:shadow-none"
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
@@ -124,14 +136,13 @@ function CustomFormField<T extends FieldValues>({
 
             {isFocused && fieldType !== FormFieldType.SKELETON && (
               <Suggestions
-                items={
-                  suggestions.filter(
-                    (s) =>
-                      s.toLowerCase().includes(
-                        String(field.value ?? "").toLowerCase()
-                      ) && s !== field.value
-                  )
-                }
+                items={suggestions.filter(
+                  (s) =>
+                    s
+                      .toLowerCase()
+                      .includes(String(field.value ?? "").toLowerCase()) &&
+                    s !== field.value
+                )}
                 subtitle={suggestionSubtitle}
                 onSelect={(value) => field.onChange(value)}
                 iconSrc={iconSrc}

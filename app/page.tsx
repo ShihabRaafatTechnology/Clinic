@@ -38,6 +38,7 @@ export default function Home() {
       {/* Side Image */}
       <Image 
         src="/assets/images/onboarding-img.png"
+        loading="eager"
         alt="patient"
         width={1000}
         height={1000}

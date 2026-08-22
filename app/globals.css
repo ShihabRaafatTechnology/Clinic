@@ -495,38 +495,6 @@
   border-radius: 3px;
 }
 
-.PhoneInputCountrySelectContainer {
-  width: 280px !important;
-  max-height: 260px !important;
-  overflow-y: auto !important;
-  background-color: #1a1d21 !important;
-  border: 1px solid #363a3d !important;
-  border-radius: 10px !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55) !important;
-  padding: 6px !important;
-  color: #abb8c4 !important;
-}
-
-.PhoneInputCountrySelectContainer input {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #363a3d !important;
-  border-radius: 8px !important;
-  background-color: #131619 !important;
-  color: #e8e9e9 !important;
-  outline: none;
-}
-
-.PhoneInputCountrySelectContainer div:not(:has(*)) {
-  padding: 8px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.PhoneInputCountrySelectContainer div:hover {
-  background-color: #131619;
-}
-
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
