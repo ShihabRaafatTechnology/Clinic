@@ -1,10 +1,11 @@
 "use client";
 
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { useState } from "react";
+import React, { useId, useState } from "react";
 import type { ReactNode } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import type { E164Number } from "libphonenumber-js";
 import { Field, FieldError, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import { Suggestions } from "./Suggestions";
@@ -58,11 +59,9 @@ function CustomFormField<T extends FieldValues>({
 }: CustomProps<T>) {
   const [isFocused, setIsFocused] = useState(false);
 
-  // Random DOM id/name so browser autofill can't recognize the field.
-  // Safe because react-hook-form tracks values via Controller, not the DOM.
-  const [domId] = useState(
-    () => `${String(name)}-${Math.random().toString(36).slice(2, 8)}`
-  );
+  // SSR-safe random id so browser autofill can't recognize the field.
+  // useId() is stable between server and client (unlike Math.random()).
+  const domId = useId();
 
   return (
     <Controller
@@ -105,12 +104,17 @@ function CustomFormField<T extends FieldValues>({
                   withCountryCallingCode
                   countryCallingCodeEditable={false}
                   defaultCountry="EG"
-                  countrySelectComponent={CountrySelect as never}
+                  countrySelectComponent={CountrySelect as React.ComponentType<{
+                    value?: string;
+                    onChange: (value?: string) => void;
+                    options: { value: string; label: string }[];
+                  }>}
+                  {...field}
                   id={domId}
                   name={domId}
                   placeholder={placeholder}
                   autoComplete={autoComplete}
-                  value={(field.value as string) || undefined}
+                  value={(field.value as E164Number) || undefined}
                   onChange={field.onChange}
                   onBlur={() => setIsFocused(false)}
                   onFocus={() => setIsFocused(true)}

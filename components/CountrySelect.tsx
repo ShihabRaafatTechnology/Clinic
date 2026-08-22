@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ComponentType } from "react";
-import { getCountryCallingCode } from "libphonenumber-js";
+import { getCountryCallingCode, type CountryCode } from "libphonenumber-js";
 import Flags from "react-phone-number-input/flags";
 
 interface CountryOption {
@@ -18,10 +18,8 @@ interface CountrySelectProps {
 
 function Flag({
   country,
-  className = "",
 }: {
   country?: string;
-  className?: string;
 }) {
   const FlagComponent = country
     ? (Flags as unknown as Record<string, ComponentType<{ title?: string }>>)[
@@ -31,7 +29,7 @@ function Flag({
 
   return (
     <span
-      className={`inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] ${className}`}
+      className="inline-flex h-3.5 w-5 shrink-0 overflow-hidden rounded-xs"
     >
       {FlagComponent ? <FlagComponent title={country} /> : null}
     </span>
@@ -98,7 +96,7 @@ export function CountrySelect({
                 <Flag country={option.value} />
                 <span className="min-w-0 flex-1 truncate">{option.label}</span>
                 <span className="shrink-0 text-xs text-dark-600">
-                  +{getCountryCallingCode(option.value as never)}
+                  +{getCountryCallingCode(option.value as CountryCode)}
                 </span>
               </button>
             </li>
