@@ -11,39 +11,22 @@ import { registerPatient } from "@/lib/actions/patient.actions";
 import { FieldGroup } from "@/components/ui/field";
 import CustomFormField, { FormFieldType } from "@/components/CustomFormField";
 import SubmitButton from "../SubmitButton";
-
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  GENDER_OPTIONS,
+  ID_TYPE_OPTIONS,
+  INSURANCE_OPTIONS,
+  PHYSICIAN_OPTIONS,
+} from "@/constants";
+import { Label } from "../ui/label";
 type RegisterFormData = z.infer<typeof RegisterFormValidation>;
-
-const GENDER_OPTIONS = [
-  { value: "Male", label: "Male" },
-  { value: "Female", label: "Female" },
-  { value: "Other", label: "Other" },
-];
-
-const PHYSICIAN_OPTIONS = [
-  { value: "Dr. Sarah Johnson", label: "Dr. Sarah Johnson" },
-  { value: "Dr. Michael Chen", label: "Dr. Michael Chen" },
-  { value: "Dr. Emily Williams", label: "Dr. Emily Williams" },
-  { value: "Dr. David Kim", label: "Dr. David Kim" },
-  { value: "Dr. Lisa Patel", label: "Dr. Lisa Patel" },
-];
-
-const INSURANCE_OPTIONS = [
-  { value: "Blue Cross", label: "Blue Cross" },
-  { value: "Aetna", label: "Aetna" },
-  { value: "UnitedHealth", label: "UnitedHealth" },
-  { value: "Cigna", label: "Cigna" },
-  { value: "Humana", label: "Humana" },
-  { value: "Other", label: "Other" },
-];
-
-const ID_TYPE_OPTIONS = [
-  { value: "Birth Certificate", label: "Birth Certificate" },
-  { value: "Driver's License", label: "Driver's License" },
-  { value: "Medical Insurance/Medicare", label: "Medical Insurance/Medicare" },
-  { value: "Passport", label: "Passport" },
-  { value: "Student ID", label: "Student ID" },
-];
 
 export const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -163,12 +146,28 @@ export const RegisterForm = ({ user }: { user: User }) => {
           />
 
           <CustomFormField
-            fieldType={FormFieldType.SELECT}
+            fieldType={FormFieldType.SKELETON}
             control={form.control}
             name="gender"
             label="Gender"
-            placeholder="Select gender"
-            selectOptions={GENDER_OPTIONS}
+            renderSkeleton={(field) => (
+              <RadioGroup
+                className="flex h-11 gap-6 xl:justify-between"
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                {GENDER_OPTIONS.map((option) => (
+                  <FieldLabel htmlFor={`gender-${option.value}`} key={option.value}>
+                    <Field orientation="horizontal" className="radio-group">
+                      <FieldContent>
+                        <FieldTitle>{option.label}</FieldTitle>
+                      </FieldContent>
+                      <RadioGroupItem value={option.value} id={`gender-${option.value}`} />
+                    </Field>
+                  </FieldLabel>
+                ))}
+              </RadioGroup>
+            )}
           />
         </div>
 

@@ -24,7 +24,7 @@ export const RegisterFormValidation = z.object({
     .string()
     .refine(isValidPhoneNumber, "Invalid phone number."),
   birthDate: z.coerce.date().refine((d) => d < new Date(), "Date of birth must be in the past."),
-  gender: z.enum(["Male", "Female", "Other"]),
+  gender: z.enum(["Male", "Female"]),
   address: z.string().min(5, "Address must be at least 5 characters."),
   occupation: z.string().min(2, "Occupation must be at least 2 characters."),
   emergencyContactName: z.string().min(2, "Name is required."),

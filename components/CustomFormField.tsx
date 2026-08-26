@@ -90,7 +90,7 @@ function CustomFormField({
             <div className="relative w-full">
               <div
                 className={`${
-                  fieldType === FormFieldType.PHONE_INPUT
+                  fieldType === FormFieldType.PHONE_INPUT || fieldType === FormFieldType.SKELETON
                     ? ""
                     : "flex items-center rounded-md border bg-dark-400 transition-colors"
                 } ${
