@@ -2,32 +2,32 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { isValidPhoneNumber } from "react-phone-number-input";
 import { z } from "zod";
 
 import CustomFormField, { FormFieldType } from "@/components/CustomFormField";
-import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { useSavedValues } from "@/hooks/use-saved-values";
+import SubmitButton from "../SubmitButton";
+import { useState } from "react";
+import { UserFormValidation } from "@/lib/validation";
+import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/actions/patient.actions";
 
-const UserFormValidation = z.object({
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters.")
-    .max(50, "Name must be at most 50 characters."),
-  email: z.string().email("Invalid email address. Please enter a valid one."),
-  phone: z
-    .string()
-    .refine(isValidPhoneNumber, "Invalid phone number. Please enter a valid one."),
-});
-
+// Define the type for the form data based on the Zod validation schema
 type UserFormData = z.infer<typeof UserFormValidation>;
 
 export const PatientForm = () => {
+  // State to manage loading state of the submit button
+  const [isLoading, setIsLoading] = useState(false);
+  // Initialize the router for navigation after form submission
+  const router = useRouter();
+
+  // Use the custom hook to manage saved values for names, emails, and phones
   const names = useSavedValues("carepulse-names");
   const emails = useSavedValues("carepulse-emails");
   const phones = useSavedValues("carepulse-phones");
 
+  // Initialize the form with react-hook-form and zod validation
   const form = useForm<UserFormData>({
     resolver: zodResolver(UserFormValidation),
     defaultValues: {
@@ -37,13 +37,29 @@ export const PatientForm = () => {
     },
   });
 
-  function onSubmit(data: UserFormData) {
-    console.log(data);
+  // Function to handle form submission
+  async function onSubmit(data: UserFormData) {
+    setIsLoading(true);
     names.add(data.name);
     emails.add(data.email);
     phones.add(data.phone);
     form.reset();
+    try {
+      const userData = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+      };
+      // Send the user data to the backend API
+      const user = await createUser(userData);
+      // Handle successful user creation (e.g. redirect)
+      if (user) router.push(`/patients/${user.$id}/register`);
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
   }
+
+
 
   return (
     <form
@@ -93,13 +109,7 @@ export const PatientForm = () => {
           suggestionSubtitle="Saved phone"
         />
 
-        <Button
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          className="shad-primary-btn w-full"
-        >
-          Get Started
-        </Button>
+        <SubmitButton isLoading={isLoading}>Get started</SubmitButton>
       </FieldGroup>
     </form>
   );
