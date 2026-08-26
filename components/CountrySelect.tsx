@@ -67,7 +67,7 @@ export function CountrySelect({
         type="button"
         onClick={() => setIsOpen((v) => !v)}
         aria-label="Select country"
-        className="flex h-full cursor-pointer items-center gap-1.5 px-3 py-2 transition-colors hover:bg-dark-500"
+        className="flex h-11 cursor-pointer items-center gap-1.5 px-3 py-2 transition-colors hover:bg-dark-500"
       >
         <Flag country={value} />
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none">

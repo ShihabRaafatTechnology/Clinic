@@ -10,11 +10,11 @@ import type { E164Number } from "libphonenumber-js";
 import { Field, FieldError, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Select } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
 import { DatePicker } from "./ui/date-picker";
 import { Suggestions } from "./Suggestions";
 import { CountrySelect } from "./CountrySelect";
+import { SelectDropdown } from "./SelectItems";
 import Image from "next/image";
 
 export enum FormFieldType {
@@ -56,6 +56,7 @@ function CustomFormField({
   iconSrc,
   iconAlt,
   disabled,
+  children,
   renderSkeleton,
   suggestions = [],
   suggestionSubtitle,
@@ -139,13 +140,35 @@ function CustomFormField({
                     disabled={disabled}
                   />
                 ) : fieldType === FormFieldType.SELECT ? (
-                  <Select
-                    value={field.value}
-                    onChange={field.onChange}
-                    options={selectOptions}
-                    placeholder={placeholder}
-                    disabled={disabled}
-                  />
+                  children ? (
+                    <SelectDropdown
+                      items={React.Children.toArray(children)
+                        .filter(
+                          (child): child is React.ReactElement =>
+                            React.isValidElement(child) &&
+                            child.type !== React.Fragment
+                        )
+                        .map((child) => ({
+                          value: (child.props as any).dataValue ?? (child.props as any).value ?? "",
+                          label: "",
+                          content: (child.props as any).children,
+                        }))}
+                      selectedValue={field.value ?? ""}
+                      onValueChange={field.onChange}
+                      placeholder={placeholder}
+                    />
+                  ) : (
+                    <SelectDropdown
+                      items={selectOptions.map((opt) => ({
+                        value: opt.value,
+                        label: opt.label,
+                        content: opt.label,
+                      }))}
+                      selectedValue={field.value ?? ""}
+                      onValueChange={field.onChange}
+                      placeholder={placeholder}
+                    />
+                  )
                 ) : fieldType === FormFieldType.TEXTAREA ? (
                   <Textarea
                     {...field}

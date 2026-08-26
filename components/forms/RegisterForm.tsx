@@ -14,7 +14,6 @@ import SubmitButton from "../SubmitButton";
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldLabel,
   FieldTitle,
 } from "@/components/ui/field";
@@ -25,7 +24,8 @@ import {
   INSURANCE_OPTIONS,
   PHYSICIAN_OPTIONS,
 } from "@/constants";
-import { Label } from "../ui/label";
+import Image from "next/image";
+import { SelectItems } from "@/components/SelectItems";
 type RegisterFormData = z.infer<typeof RegisterFormValidation>;
 
 export const RegisterForm = ({ user }: { user: User }) => {
@@ -39,7 +39,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
       email: user.email,
       phone: user.phone,
       birthDate: undefined,
-      gender: undefined,
+      gender: "Male",
       address: "",
       occupation: "",
       emergencyContactName: "",
@@ -154,7 +154,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
               <RadioGroup
                 className="flex h-11 gap-6 xl:justify-between"
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                value={field.value}
               >
                 {GENDER_OPTIONS.map((option) => (
                   <FieldLabel htmlFor={`gender-${option.value}`} key={option.value}>
@@ -245,8 +245,22 @@ export const RegisterForm = ({ user }: { user: User }) => {
           name="primaryPhysician"
           label="Primary physician"
           placeholder="Select a physician"
-          selectOptions={PHYSICIAN_OPTIONS}
-        />
+        >
+          {PHYSICIAN_OPTIONS.map((option) => (
+            <SelectItems key={option.value} value={option.value}>
+              <div className="flex cursor-pointer items-center gap-2">
+                <Image
+                src={option.image}
+                alt={option.value}
+                width={32}
+                height={32}
+                className="rounded-full border border-dark-500"
+                />
+                <p>{option.value}</p>
+              </div>
+            </SelectItems>
+          ))}
+        </CustomFormField>
 
         <CustomFormField
           fieldType={FormFieldType.TEXTAREA}
