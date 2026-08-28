@@ -16,6 +16,7 @@ export default function Home() {
             width={1000}
             height={1000}
             className="mb-12 h-10 w-fit"
+            draggable="false"
           />
 
           {/* Patient Form */}
@@ -36,13 +37,14 @@ export default function Home() {
       </section>
 
       {/* Side Image */}
-      <Image 
+      <Image
         src="/assets/images/onboarding-img.png"
         loading="eager"
         alt="patient"
         width={1000}
         height={1000}
         className="side-img max-w-[50%]"
+        draggable="false"
       />
     </div>
   );

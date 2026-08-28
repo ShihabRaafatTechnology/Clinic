@@ -91,7 +91,8 @@ function CustomFormField({
             <div className="relative w-full">
               <div
                 className={`${
-                  fieldType === FormFieldType.PHONE_INPUT || fieldType === FormFieldType.SKELETON
+                  fieldType === FormFieldType.PHONE_INPUT ||
+                  fieldType === FormFieldType.SKELETON
                     ? ""
                     : "flex items-center rounded-md border bg-dark-400 transition-colors"
                 } ${
@@ -107,6 +108,7 @@ function CustomFormField({
                     width={24}
                     alt={iconAlt ?? "icon"}
                     className="ml-3 shrink-0"
+                    draggable="false"
                   />
                 )}
 
@@ -116,11 +118,13 @@ function CustomFormField({
                     withCountryCallingCode
                     countryCallingCodeEditable={false}
                     defaultCountry="EG"
-                    countrySelectComponent={CountrySelect as React.ComponentType<{
-                      value?: string;
-                      onChange: (value?: string) => void;
-                      options: { value: string; label: string }[];
-                    }>}
+                    countrySelectComponent={
+                      CountrySelect as React.ComponentType<{
+                        value?: string;
+                        onChange: (value?: string) => void;
+                        options: { value: string; label: string }[];
+                      }>
+                    }
                     {...field}
                     id={domId}
                     name={domId}
@@ -149,7 +153,10 @@ function CustomFormField({
                             child.type !== React.Fragment
                         )
                         .map((child) => ({
-                          value: (child.props as any).dataValue ?? (child.props as any).value ?? "",
+                          value:
+                            (child.props as any).dataValue ??
+                            (child.props as any).value ??
+                            "",
                           label: "",
                           content: (child.props as any).children,
                         }))}

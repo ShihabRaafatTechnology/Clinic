@@ -157,12 +157,18 @@ export const RegisterForm = ({ user }: { user: User }) => {
                 value={field.value}
               >
                 {GENDER_OPTIONS.map((option) => (
-                  <FieldLabel htmlFor={`gender-${option.value}`} key={option.value}>
+                  <FieldLabel
+                    htmlFor={`gender-${option.value}`}
+                    key={option.value}
+                  >
                     <Field orientation="horizontal" className="radio-group">
                       <FieldContent>
                         <FieldTitle>{option.label}</FieldTitle>
                       </FieldContent>
-                      <RadioGroupItem value={option.value} id={`gender-${option.value}`} />
+                      <RadioGroupItem
+                        value={option.value}
+                        id={`gender-${option.value}`}
+                      />
                     </Field>
                   </FieldLabel>
                 ))}
@@ -250,11 +256,12 @@ export const RegisterForm = ({ user }: { user: User }) => {
             <SelectItems key={option.value} value={option.value}>
               <div className="flex cursor-pointer items-center gap-2">
                 <Image
-                src={option.image}
-                alt={option.value}
-                width={32}
-                height={32}
-                className="rounded-full border border-dark-500"
+                  src={option.image}
+                  alt={option.value}
+                  width={32}
+                  height={32}
+                  className="rounded-full border border-dark-500"
+                  draggable="false"
                 />
                 <p>{option.value}</p>
               </div>
@@ -318,6 +325,15 @@ export const RegisterForm = ({ user }: { user: User }) => {
           placeholder="123456789"
         />
       </FieldGroup>
+
+      <CustomFormField
+            fieldType={FormFieldType.SKELETON}
+            control={form.control}
+            name="identificationDocument"
+            label="Scanned copy of identification document"
+            >
+
+            </CustomFormField>
 
       <FieldGroup>
         <h2 className="sub-header">Consent and Privacy</h2>
