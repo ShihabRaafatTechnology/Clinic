@@ -38,7 +38,7 @@ export const registerPatient = async (patientData: RegisterUserParams) => {
                 ID.unique(),
                 file
             );
-            identificationDocumentUrl = storage.getFilePreview(BUCKET_ID, uploaded.$id).toString();
+            identificationDocumentUrl = storage.getFileView(BUCKET_ID, uploaded.$id).toString();
         }
 
         const patientDocument = {
@@ -47,7 +47,7 @@ export const registerPatient = async (patientData: RegisterUserParams) => {
             email: patientData.email,
             phone: patientData.phone,
             birthDate: patientData.birthDate,
-            gender: patientData.gender,
+            gender: patientData.gender.toLowerCase(),
             address: patientData.address,
             occupation: patientData.occupation,
             emergencyContactName: patientData.emergencyContactName,
@@ -72,7 +72,9 @@ export const registerPatient = async (patientData: RegisterUserParams) => {
             patientDocument
         );
 
-        return newPatient;
+        // Return only plain fields from the created document so it can
+        // safely cross the Server → Client boundary.
+        return { $id: newPatient.$id, userId: newPatient.userId };
     } catch (error) {
         console.error("Error registering patient:", error);
         throw error;

@@ -26,6 +26,7 @@ import {
 } from "@/constants";
 import Image from "next/image";
 import { SelectItems } from "@/components/SelectItems";
+import { FileUpload } from "@/components/FileUpload";
 type RegisterFormData = z.infer<typeof RegisterFormValidation>;
 
 export const RegisterForm = ({ user }: { user: User }) => {
@@ -60,6 +61,16 @@ export const RegisterForm = ({ user }: { user: User }) => {
   async function onSubmit(data: RegisterFormData) {
     setIsLoading(true);
     try {
+      // Attach the uploaded file so the server action can persist it
+      const identificationDocument = data.identificationDocument
+        ? (() => {
+            const fd = new FormData();
+            fd.append("blobFile", data.identificationDocument);
+            fd.append("fileName", data.identificationDocument.name);
+            return fd;
+          })()
+        : undefined;
+
       const patientData: RegisterUserParams = {
         userId: user.$id,
         name: data.name,
@@ -80,7 +91,7 @@ export const RegisterForm = ({ user }: { user: User }) => {
         pastMedicalHistory: data.pastMedicalHistory,
         identificationType: data.identificationType,
         identificationNumber: data.identificationNumber,
-        identificationDocument: undefined,
+        identificationDocument,
         privacyConsent: data.privacyConsent,
       };
 
@@ -324,16 +335,23 @@ export const RegisterForm = ({ user }: { user: User }) => {
           label="Identification number"
           placeholder="123456789"
         />
+
+        <CustomFormField
+          fieldType={FormFieldType.SKELETON}
+          control={form.control}
+          name="identificationDocument"
+          label="Scanned copy of identification document"
+          renderSkeleton={(field) => (
+            <FileUpload
+              value={field.value}
+              onChange={field.onChange}
+              disabled={field.disabled}
+            />
+          )}
+        />
       </FieldGroup>
 
-      <CustomFormField
-            fieldType={FormFieldType.SKELETON}
-            control={form.control}
-            name="identificationDocument"
-            label="Scanned copy of identification document"
-            >
-
-            </CustomFormField>
+      {/*  CustomFormField Upload files form*/}
 
       <FieldGroup>
         <h2 className="sub-header">Consent and Privacy</h2>

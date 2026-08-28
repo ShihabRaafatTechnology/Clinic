@@ -42,7 +42,7 @@ export default function RegisterLayout({
           fill
           priority
           sizes="(max-width: 1200px) 390px, 490px"
-          className="object-cover object-left"
+          className="object-cover object-right"
           draggable="false"
         />
       </div>

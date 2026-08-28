@@ -40,6 +40,7 @@ export const RegisterFormValidation = z.object({
   pastMedicalHistory: z.string().optional(),
   identificationType: z.string().optional(),
   identificationNumber: z.string().optional(),
+  identificationDocument: z.custom<File>().optional(),
   privacyConsent: z.literal(true, {
     errorMap: () => ({ message: "You must consent to the privacy policy." }),
   }),

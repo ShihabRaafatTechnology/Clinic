@@ -20,6 +20,7 @@
     "node-appwrite": "^28.0.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-dropzone": "^20.1.1",
     "react-hook-form": "^7.85.0",
     "react-phone-number-input": "^3.4.18",
     "shadcn": "^4.18.0",
